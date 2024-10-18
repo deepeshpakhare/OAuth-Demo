@@ -1,13 +1,12 @@
-import { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import {  useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI } from './Secrets';
 import axios from 'axios';
+import Cookies from 'js-cookie';
+
 
 export default function AuthPage() {
-
-    const location = useLocation();
     const navigate = useNavigate();
-    const  state = location.state;
   
     useEffect(() => {
       const getAccessToken = async () => {
@@ -15,8 +14,10 @@ export default function AuthPage() {
         const code = urlParams.get('code');
         const receivedState = urlParams.get('state');
   
-        if (receivedState !== state) {
-            console.log(receivedState, state);
+        const cookieState = Cookies.get('linkedin_auth_state');
+
+        if (receivedState !== cookieState) {
+            console.log(receivedState, cookieState);
             console.error('State parameter does not match. Possible CSRF attack.');
             return;
         }
@@ -45,7 +46,7 @@ export default function AuthPage() {
         navigate('/');
       };
       getAccessToken();
-    }, [navigate, state]);
+    }, [navigate]);
   
     return <div>Redirecting...</div>;
 }

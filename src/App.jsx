@@ -1,12 +1,10 @@
-import { useNavigate } from 'react-router-dom';
 import { nanoid } from 'nanoid';
 import './App.css'
 import { CLIENT_ID, REDIRECT_URI } from './Secrets';
-
+import Cookies from 'js-cookie';
 
 
 function App() {
-  const navigate = useNavigate();
 
   const handleLinkedInLogin = () => {
     const clientId = CLIENT_ID;
@@ -15,11 +13,11 @@ function App() {
     const responseType = 'code';
 
     const state = nanoid(10);
+    Cookies.set('linkedin_auth_state', state, { expires: 1 / 24 });
 
     window.location.href = 
     `https://www.linkedin.com/oauth/v2/authorization?response_type=${responseType}&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&state=${state}`;
     
-    navigate(`/auth/linkedin`, { state: state });
   
   };
 
