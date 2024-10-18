@@ -1,35 +1,34 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useNavigate } from 'react-router-dom';
+import { nanoid } from 'nanoid';
 import './App.css'
+import { CLIENT_ID, REDIRECT_URI } from './Secrets';
+
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  const navigate = useNavigate();
+
+  const handleLinkedInLogin = () => {
+    const clientId = CLIENT_ID;
+    const redirectUri = REDIRECT_URI;
+    const scope = 'openid%20profile%20email';
+    const responseType = 'code';
+
+    const state = nanoid(10);
+
+    window.location.href = 
+    `https://www.linkedin.com/oauth/v2/authorization?response_type=${responseType}&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&state=${state}`;
+    
+    navigate(`/auth/linkedin`, { state: state });
+  
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <h1>Login with LinkedIn</h1>
+      <button onClick={handleLinkedInLogin}>Login with LinkedIn</button>
+    </div>
+  );
 }
 
 export default App
