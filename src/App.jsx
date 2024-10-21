@@ -18,7 +18,6 @@ function App() {
     window.location.href = 
     `https://www.linkedin.com/oauth/v2/authorization?response_type=${responseType}&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&state=${state}`;
     
-  
   };
 
   return (
