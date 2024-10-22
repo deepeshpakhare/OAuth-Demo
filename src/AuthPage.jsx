@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 //import { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI } from './Secrets';
 //import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -7,7 +6,7 @@ import Cookies from 'js-cookie';
 
 
 export default function AuthPage() {
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
 
     useEffect(() => {
         const getAccessToken = async () => {
@@ -16,42 +15,35 @@ export default function AuthPage() {
             const receivedState = urlParams.get('state');
 
             const cookieState = Cookies.get('linkedin_auth_state');
-
             if (receivedState !== cookieState) {
                 console.log(receivedState, cookieState);
                 console.error('State parameter does not match. Possible CSRF attack.');
                 return;
             }
             console.log(code);
-            Cookies.remove("linkedin_auth_state");
-            /*if (code) {
-                const clientId = CLIENT_ID;
-                const clientSecret = CLIENT_SECRET;
-                const redirectUri = REDIRECT_URI;
 
+            if (code) {
                 try {
-                    const response = await axios.post('https://www.linkedin.com/oauth/v2/accessToken', qs.stringify({
-                        grant_type: 'authorization_code',
-                        code,
-                        redirect_uri: redirectUri,
-                        client_id: clientId,
-                        client_secret: clientSecret,
-                    }), {
+                    const response = await fetch('http://localhost:8080/auth_code', {
+                        method: 'POST',
                         headers: {
-                            'Access-Control-Allow-Origin': '*',
-                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'Content-Type': 'application/json',
                         },
+                        body: JSON.stringify({
+                            auth_code: code
+                        }),
                     });
-                    const accessToken = response.data.access_token;
-                    console.log('Access Token:', accessToken);
+                    const data = await response.json();
+                    console.log(data);
                 } catch (error) {
-                    console.error('Error fetching access token:', error);
+                    console.log("Error sending data to backend", error)
                 }
-            }*/
-            navigate('/');
+            }
+            Cookies.remove("linkedin_auth_state");
+            //navigate('/');
         };
         getAccessToken();
-    }, [navigate]);
+    }, []);
 
-    return <div>Redirecting...</div>;
+    return <div>Auth Componet</div>;
 }
