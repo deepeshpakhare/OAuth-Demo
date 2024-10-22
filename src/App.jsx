@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid';
 import './App.css'
-import { CLIENT_ID } from './Secrets';
+import { CLIENT_ID, FB_APP_ID } from './Secrets';
 import Cookies from 'js-cookie';
 import FacebookLogin from 'react-facebook-login';
 import { useState } from 'react';
@@ -48,7 +48,7 @@ function App() {
           </div>
         ) : (
           <FacebookLogin
-            appId="469405356115253"
+            appId={FB_APP_ID}
             autoLoad={false}
             fields="name, email, picture"
             callback={responseFacebook}
